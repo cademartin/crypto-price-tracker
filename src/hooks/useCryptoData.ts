@@ -43,11 +43,11 @@ const calculateArbitrage = (exchanges: ExchangePrice[]) => {
 };
 
 const generateExchangePrice = (basePrice: number, exchange: typeof EXCHANGES[0]): ExchangePrice => {
-  const variation = (Math.random() * 0.03 - 0.015);
+  const variation = (Math.random() * 0.005 - 0.0025);
   return {
     exchange: exchange.name,
-    price: basePrice * (1 + variation),
-    volume_24h: Math.random() * 1000000,
+    price: Number((basePrice * (1 + variation)).toFixed(8)),
+    volume_24h: Math.round(Math.random() * 1000000),
     last_traded: new Date().toISOString(),
     trading_fee: exchange.fee
   };
@@ -65,7 +65,9 @@ export const useCryptoData = (search: string) => {
             order: 'market_cap_desc',
             per_page: 20,
             page: 1,
-            sparkline: false
+            sparkline: false,
+            price_change_percentage: '1h,24h,7d',
+            precision: 8
           }
         }
       );
@@ -82,21 +84,29 @@ export const useCryptoData = (search: string) => {
           generateExchangePrice(coin.current_price, exchange)
         );
 
+        const sortedExchanges = [...exchanges].sort((a, b) => b.price - a.price);
+        const arbitrage = calculateArbitrage(sortedExchanges);
+
         return {
           ...coin,
-          exchanges,
-          arbitrage: calculateArbitrage(exchanges)
+          current_price: Number(coin.current_price.toFixed(8)),
+          exchanges: sortedExchanges,
+          arbitrage: {
+            ...arbitrage,
+            potentialProfit: Number(arbitrage.potentialProfit.toFixed(8)),
+            profitAfterFees: Number(arbitrage.profitAfterFees.toFixed(8))
+          }
         };
       });
 
-      return cryptosWithArbitrage.sort((a, b) => 
+      return cryptosWithArbitrage.sort((a: CryptoData, b: CryptoData) => 
         b.arbitrage.profitAfterFees - a.arbitrage.profitAfterFees
       );
     },
     {
       staleTime: 30000,
       cacheTime: 60000,
-      refetchInterval: 30000,
+      refetchInterval: 15000,
       retry: 3
     }
   );
