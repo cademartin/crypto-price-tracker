@@ -43,19 +43,19 @@ export const PriceCard: React.FC<PriceCardProps> = ({ crypto }) => {
   const priceChange = formatPercentage(crypto.price_change_percentage_24h);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between cursor-pointer" 
            onClick={() => setIsExpanded(!isExpanded)}>
         <div className="flex items-center space-x-3">
           <img src={crypto.image} alt={crypto.name} className="w-8 h-8" />
           <div>
-            <h3 className="font-semibold">{crypto.name}</h3>
-            <span className="text-gray-500 text-sm uppercase">{crypto.symbol}</span>
+            <h3 className="font-semibold dark:text-white">{crypto.name}</h3>
+            <span className="text-gray-500 dark:text-gray-400 text-sm uppercase">{crypto.symbol}</span>
           </div>
         </div>
         
         <div className="text-right">
-          <div className="font-bold">${formatPrice(crypto.current_price)}</div>
+          <div className="font-bold dark:text-white">${formatPrice(crypto.current_price)}</div>
           <div className={priceChange.className}>
             {priceChange.value}
             {crypto.price_change_percentage_24h > 0 ? (
@@ -67,9 +67,9 @@ export const PriceCard: React.FC<PriceCardProps> = ({ crypto }) => {
         </div>
         
         {isExpanded ? (
-          <ChevronUp className="ml-2" size={20} />
+          <ChevronUp className="ml-2 dark:text-gray-400" size={20} />
         ) : (
-          <ChevronDown className="ml-2" size={20} />
+          <ChevronDown className="ml-2 dark:text-gray-400" size={20} />
         )}
       </div>
 
@@ -77,12 +77,12 @@ export const PriceCard: React.FC<PriceCardProps> = ({ crypto }) => {
         <div className="mt-4 space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-gray-500">Market Cap</span>
-              <div className="font-medium">{formatVolume(crypto.market_cap)}</div>
+              <span className="text-gray-500 dark:text-gray-400">Market Cap</span>
+              <div className="font-medium dark:text-white">{formatVolume(crypto.market_cap)}</div>
             </div>
             <div>
-              <span className="text-gray-500">24h Volume</span>
-              <div className="font-medium">{formatVolume(crypto.total_volume)}</div>
+              <span className="text-gray-500 dark:text-gray-400">24h Volume</span>
+              <div className="font-medium dark:text-white">{formatVolume(crypto.total_volume)}</div>
             </div>
           </div>
           <ArbitrageInfo arbitrage={crypto.arbitrage} />

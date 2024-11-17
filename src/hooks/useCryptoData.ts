@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import type { CryptoData, ExchangePrice } from '../types/crypto';
+import { useInvestment } from '../context/InvestmentContext';
 
 const COINGECKO_API = 'https://api.coingecko.com/api/v3';
 
@@ -17,7 +18,7 @@ const EXCHANGES = [
   { name: 'Bybit', fee: 0.1 }
 ];
 
-const calculateArbitrage = (exchanges: ExchangePrice[]) => {
+const calculateArbitrage = (exchanges: ExchangePrice[], investmentAmount: number) => {
   const highest = exchanges.reduce((max, exchange) => 
     exchange.price > max.price ? exchange : max
   );
@@ -26,7 +27,6 @@ const calculateArbitrage = (exchanges: ExchangePrice[]) => {
     exchange.price < min.price ? exchange : min
   );
 
-  const investmentAmount = 100;
   const rawProfit = investmentAmount * (highest.price - lowest.price) / lowest.price;
   
   const buyFee = investmentAmount * (lowest.trading_fee / 100);
@@ -54,8 +54,10 @@ const generateExchangePrice = (basePrice: number, exchange: typeof EXCHANGES[0])
 };
 
 export const useCryptoData = (search: string) => {
+  const { investmentAmount } = useInvestment();
+  
   return useQuery<CryptoData[]>(
-    ['cryptoData', search],
+    ['cryptoData', search, investmentAmount],
     async () => {
       const { data } = await axios.get(
         `${COINGECKO_API}/coins/markets`,
@@ -85,7 +87,7 @@ export const useCryptoData = (search: string) => {
         );
 
         const sortedExchanges = [...exchanges].sort((a, b) => b.price - a.price);
-        const arbitrage = calculateArbitrage(sortedExchanges);
+        const arbitrage = calculateArbitrage(sortedExchanges, investmentAmount);
 
         return {
           ...coin,

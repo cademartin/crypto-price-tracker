@@ -41,48 +41,48 @@ export const ArbitrageInfo: React.FC<ArbitrageInfoProps> = ({ arbitrage }) => {
   const profitPercentage = formatPercentage(arbitrage.profitPercentage);
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4">
-      <h4 className="text-lg font-semibold mb-3">Arbitrage Opportunity</h4>
+    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+      <h4 className="text-lg font-semibold mb-3 dark:text-white">Arbitrage Opportunity</h4>
       
       <div className="flex items-center justify-between mb-4">
         <div className="flex-1">
-          <div className="text-sm text-gray-500">Buy from</div>
-          <div className="font-medium">{arbitrage.lowestExchange.exchange}</div>
-          <div className="text-sm">${formatPrice(arbitrage.lowestExchange.price)}</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">Buy from</div>
+          <div className="font-medium dark:text-white">{arbitrage.lowestExchange.exchange}</div>
+          <div className="text-sm dark:text-gray-300">${formatPrice(arbitrage.lowestExchange.price)}</div>
         </div>
         
         <ArrowRight className="mx-2 text-gray-400" size={20} />
         
         <div className="flex-1 text-right">
-          <div className="text-sm text-gray-500">Sell on</div>
-          <div className="font-medium">{arbitrage.highestExchange.exchange}</div>
-          <div className="text-sm">${formatPrice(arbitrage.highestExchange.price)}</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">Sell on</div>
+          <div className="font-medium dark:text-white">{arbitrage.highestExchange.exchange}</div>
+          <div className="text-sm dark:text-gray-300">${formatPrice(arbitrage.highestExchange.price)}</div>
         </div>
       </div>
 
-      <div className="space-y-2 border-t pt-3">
+      <div className="space-y-2 border-t border-gray-200 dark:border-gray-600 pt-3">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Potential Profit:</span>
-          <span className="font-medium">{formatProfit(arbitrage.potentialProfit)}</span>
+          <span className="text-gray-500 dark:text-gray-400">Potential Profit:</span>
+          <span className="font-medium dark:text-white">{formatProfit(arbitrage.potentialProfit)}</span>
         </div>
         
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Price Difference:</span>
+          <span className="text-gray-500 dark:text-gray-400">Price Difference:</span>
           <span className={profitPercentage.className}>{profitPercentage.value}</span>
         </div>
         
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Profit After Fees:</span>
+          <span className="text-gray-500 dark:text-gray-400">Profit After Fees:</span>
           <span className={`font-medium ${
-            arbitrage.profitAfterFees > 0 ? 'text-green-600' : 'text-red-600'
+            arbitrage.profitAfterFees > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
           }`}>
             {formatProfit(arbitrage.profitAfterFees)}
           </span>
         </div>
 
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Trading Fees:</span>
-          <span>
+          <span className="text-gray-500 dark:text-gray-400">Trading Fees:</span>
+          <span className="dark:text-gray-300">
             {arbitrage.lowestExchange.trading_fee}% / {arbitrage.highestExchange.trading_fee}%
           </span>
         </div>
