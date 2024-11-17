@@ -26,7 +26,7 @@ const calculateArbitrage = (exchanges: ExchangePrice[]) => {
     exchange.price < min.price ? exchange : min
   );
 
-  const investmentAmount = 1000;
+  const investmentAmount = 100;
   const rawProfit = investmentAmount * (highest.price - lowest.price) / lowest.price;
   
   const buyFee = investmentAmount * (lowest.trading_fee / 100);
