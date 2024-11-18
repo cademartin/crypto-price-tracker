@@ -1,66 +1,46 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Coins } from 'lucide-react';
-import { SearchBar } from './components/SearchBar';
-import { PriceCard } from './components/PriceCard';
-import { useCryptoData } from './hooks/useCryptoData';
 import { ThemeProvider } from './context/ThemeContext';
 import { InvestmentProvider } from './context/InvestmentContext';
-import { Settings } from './components/Settings';
-import { useTheme } from './context/ThemeContext';
-import { Sun, Moon } from 'lucide-react';
 import { SidePanel } from './components/SidePanel';
+import { TriangularArbitrage } from './components/TriangularArbitrage';
+import { CryptoTracker } from './components/CryptoTracker';
 
 const queryClient = new QueryClient();
 
-function CryptoTracker() {
-  const [search, setSearch] = useState('');
-  const { data: cryptos, isLoading, error } = useCryptoData(search);
-  const { theme, toggleTheme } = useTheme();
-
-  if (error) {
-    return (
-      <div className="text-center text-red-500">
-        Error loading cryptocurrency data. Please try again later.
-      </div>
-    );
-  }
-
+function Navigation() {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-6">
-          <SidePanel />
-          <div className="flex items-center gap-4">
-            <Coins size={32} className="text-blue-500" />
-            <div>
-              <h1 className="text-3xl font-bold dark:text-white">Crypto Price Tracker</h1>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Sorted by highest arbitrage opportunity</p>
+    <nav className="bg-white dark:bg-gray-800 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center gap-6">
+            <SidePanel />
+            <div className="flex items-center gap-4">
+              <Coins size={32} className="text-blue-500" />
+              <div>
+                <h1 className="text-xl font-bold dark:text-white">Crypto Arbitrage</h1>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <SearchBar search={search} setSearch={setSearch} />
-          <div className="min-w-[200px]">
-            <Settings />
+          <div className="flex space-x-4">
+            <Link 
+              to="/" 
+              className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              Cross-Exchange
+            </Link>
+            <Link 
+              to="/triangular" 
+              className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              Triangular
+            </Link>
           </div>
         </div>
       </div>
-
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-xl h-64" />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cryptos?.map((crypto) => (
-            <PriceCard key={crypto.id} crypto={crypto} />
-          ))}
-        </div>
-      )}
-    </div>
+    </nav>
   );
 }
 
@@ -69,9 +49,15 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <InvestmentProvider>
-          <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
-            <CryptoTracker />
-          </div>
+          <BrowserRouter basename="/crypto-price-tracker">
+            <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
+              <Navigation />
+              <Routes>
+                <Route path="/" element={<CryptoTracker />} />
+                <Route path="/triangular" element={<TriangularArbitrage />} />
+              </Routes>
+            </div>
+          </BrowserRouter>
         </InvestmentProvider>
       </ThemeProvider>
     </QueryClientProvider>
