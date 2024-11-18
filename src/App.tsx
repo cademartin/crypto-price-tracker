@@ -9,6 +9,7 @@ import { InvestmentProvider } from './context/InvestmentContext';
 import { Settings } from './components/Settings';
 import { useTheme } from './context/ThemeContext';
 import { Sun, Moon } from 'lucide-react';
+import { SidePanel } from './components/SidePanel';
 
 const queryClient = new QueryClient();
 
@@ -29,16 +30,7 @@ function CryptoTracker() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-6">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            {theme === 'light' ? (
-              <Moon className="text-gray-600 dark:text-gray-300" />
-            ) : (
-              <Sun className="text-gray-600 dark:text-gray-300" />
-            )}
-          </button>
+          <SidePanel />
           <div className="flex items-center gap-4">
             <Coins size={32} className="text-blue-500" />
             <div>
